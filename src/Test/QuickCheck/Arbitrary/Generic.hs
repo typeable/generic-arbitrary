@@ -15,6 +15,16 @@ instance Arbitrary Foo where
   shrink = genericShrink
 @
 
+This instance can also be derived using DerivingVia language extension
+
+@
+data Foo = Foo
+  { _fooX :: X
+  , _fooY :: Y
+  } deriving (Generic)
+    deriving (Arbitrary) via GenericArbitrary Foo
+@
+
 The generated 'arbitrary' method is equivalent to
 
 @Foo <$> arbitrary <*> arbitrary@.
@@ -22,16 +32,29 @@ The generated 'arbitrary' method is equivalent to
 -}
 
 module Test.QuickCheck.Arbitrary.Generic
-  ( Arbitrary(..)
+  ( GenericArbitrary(..)
+  , Arbitrary(..)
   , genericArbitrary
   , genericShrink
   ) where
 
 import Control.Applicative
+import Data.Coerce (coerce)
 import Data.Proxy
 import GHC.Generics as G
 import GHC.TypeLits
 import Test.QuickCheck as QC
+import Test.QuickCheck.Arbitrary (GSubterms, RecursivelyShrink)
+
+newtype GenericArbitrary a =
+  GenericArbitrary
+    { _genericArbitrary :: a }
+  deriving (Show, Eq)
+
+instance (Generic a, GArbitrary ga, RecursivelyShrink ga, GSubterms ga a, ga ~ Rep a
+         ) => Arbitrary (GenericArbitrary a) where
+  arbitrary = coerce (genericArbitrary :: Gen a)
+  shrink = coerce (genericShrink :: a -> [a])
 
 class GArbitrary a where
   gArbitrary :: QC.Gen (a x)
