@@ -1,6 +1,5 @@
 resolver: lts-6.30
 
 extra-deps:
-  - git: https://github.com/tmortiboy/quickcheck.git
-    commit: ab1100a7c7449e7944288b86fe1702e9c98ca5d3
+  - QuickCheck-2.14
   - splitmix-0.0.4
