@@ -82,8 +82,8 @@ type family SumLen a :: Nat where
 instance (GArbitrary a, GArbitrary b, KnownNat (SumLen a), KnownNat (SumLen b)
          ) => GArbitrary (a G.:+: b) where
   gArbitrary = frequency
-    [ (lfreq, G.L1 <$> gArbitrary)
-    , (rfreq, G.R1 <$> gArbitrary) ]
+    [ (lfreq, G.L1 <$> QC.scale pred gArbitrary)
+    , (rfreq, G.R1 <$> QC.scale pred gArbitrary) ]
     where
       lfreq = fromIntegral $ natVal (Proxy :: Proxy (SumLen a))
       rfreq = fromIntegral $ natVal (Proxy :: Proxy (SumLen b))
