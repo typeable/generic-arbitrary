@@ -6,7 +6,7 @@ import           Test.QuickCheck
 import           Test.QuickCheck.Arbitrary.Generic
 
 data Expr
-  = Lit Int
+  = Lit
   | Add Expr Expr
   | Mul Expr Expr
   deriving (Eq, Show, Generic)
