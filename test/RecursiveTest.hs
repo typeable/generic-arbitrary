@@ -32,13 +32,13 @@ instance Arbitrary Multiple where
   arbitrary = genericArbitrary
   shrink = genericShrink
 
-data Fail = Fail Fail
+data Fail = Fail Fail | NotFail
   deriving (Eq, Show, Generic)
 
 instance Arbitrary Fail where
   arbitrary = genericArbitrary
   shrink = genericShrink
 
--- | Check that we are not generating infinite
+-- | Check that we are not generating infinite terms
 prop_exprTotal :: Expr -> Property
 prop_exprTotal = total
