@@ -59,12 +59,6 @@ instance
   arbitrary = coerce (genericArbitrary :: Gen a)
   shrink = coerce (genericShrink :: a -> [a])
 
-
--- type family FinalConstructors self (a :: * -> *) :: [* -> *] where
---   FinalConstructors self (a :+: b) =
---     FinalConstructors self a :++: FinalConstructors self b
---   FinalConstructors self (M1 C t f) = If (AllFieldsFinal self f) '[M1 C t f] '[]
-
 type family AllFieldsFinal self (a :: * -> *) :: Bool where
   AllFieldsFinal self U1 = 'True
   AllFieldsFinal self (a :*: b) = AllFieldsFinal self a && AllFieldsFinal self b
@@ -147,7 +141,7 @@ instance
   , GArbitrary self (a :+: b) 'True
   ) => GArbitrary self (D1 t (a :+: b)) 'True where
   gArbitrary = sized $ \s -> M1 <$>
-    if s > 1 then gArbitrary @self else finiteSum @self
+    if s > 1 then gArbitrary @self else oneof (finiteSum @self @a @b)
 
 -- | Any sum inside of declaration
 instance
@@ -165,33 +159,33 @@ instance
 class
   ( Finite self a ~ af, Finite self b ~ bf
   ) => FiniteSum self (a :: * -> *) (b :: * -> *) af bf where
-  finiteSum :: Gen ((a :+: b) p)
+  finiteSum :: [Gen ((a :+: b) p)]
 
 instance
   ( FiniteSumElem self a, FiniteSumElem self b
   , Finite self a ~ 'True
   , Finite self b ~ 'True
   ) => FiniteSum self a b 'True 'True where
-  finiteSum = oneof
-    [ L1 <$> finiteElem @self
-    , R1 <$> finiteElem @self ]
+  finiteSum = concat
+    [ fmap L1 <$> finiteElem @self @a
+    , fmap R1 <$> finiteElem @self @b]
 
 instance
   ( FiniteSumElem self a
   , Finite self a ~ 'True
   , Finite self b ~ 'False
   ) => FiniteSum self a b 'True 'False where
-  finiteSum = L1 <$> finiteElem @self
+  finiteSum = fmap L1 <$> finiteElem @self @a
 
 instance
   ( FiniteSumElem self b
   , Finite self a ~ 'False
   , Finite self b ~ 'True
   ) => FiniteSum self a b 'False 'True where
-  finiteSum = R1 <$> finiteElem @self
+  finiteSum = fmap R1 <$> finiteElem @self @b
 
 class FiniteSumElem self a where
-  finiteElem :: Gen (a p)
+  finiteElem :: [Gen (a p)]
 
 instance
   ( FiniteSum self a b af bf
@@ -201,7 +195,7 @@ instance
 instance
   ( GArbitrary self (C1 c f) 'True
   ) => FiniteSumElem self (C1 c f) where
-  finiteElem = gArbitrary @self
+  finiteElem = [gArbitrary @self]
 
 instance
   ( TypeError (ShowType self :<>: Text " refers to itself in all constructors")
