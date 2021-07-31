@@ -65,7 +65,6 @@ type family AllFieldsFinal self (a :: * -> *) :: Bool where
 
 type family Finite self (a :: * -> *) :: Bool where
   Finite self U1 = 'True
-  -- | The constructor field is the ADT itself. Not finite.
   Finite self (K1 R self) = 'False
   Finite self (K1 R other) = 'True
   Finite self (a :*: b) = Finite self a && Finite self b
