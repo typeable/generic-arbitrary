@@ -12,7 +12,6 @@ license-file:        LICENSE
 author:              Typeable.io contributors
 maintainer:          makeit@typeable.io
 homepage:            http://github.com/typeable/generic-arbitrary#readme
-source-repository:   git@github.com:typeable/generic-arbitrary.git
 category:            Generic
 build-type:          Simple
 extra-source-files:  CHANGELOG.md
