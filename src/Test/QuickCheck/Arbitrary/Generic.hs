@@ -73,6 +73,11 @@ type family Finite self (a :: * -> *) :: Bool where
   Finite self (M1 C c f) = AllFieldsFinal self f
   Finite self (M1 S s f) = Finite self f
 
+type family ArgumentsCount (a :: * -> *) :: Nat where
+  ArgumentsCount U1 = 1
+  ArgumentsCount (M1 S s f) = 1
+  ArgumentsCount (a :*: b) = (ArgumentsCount a) + (ArgumentsCount b)
+
 -- | Calculates count of constructors encoded by particular ':+:'.
 -- Internal use only.
 type family SumLen a :: Nat where
@@ -96,12 +101,15 @@ instance
 -- | The constructor meta information
 instance
   ( GArbitrary self f some
+  , KnownNat (ArgumentsCount f)
   , AllFieldsFinal self f ~ some
   ) => GArbitrary self (C1 c f) some where
   gArbitrary = M1 <$> scale predNat (gArbitrary @self)
     where
-      predNat 0 = 0
-      predNat n = pred n
+      argumentsCount = fromIntegral $ natVal (Proxy @(ArgumentsCount f))
+      predNat n = max 0 $ if argumentsCount > 1
+        then n `div` argumentsCount
+        else pred n
 
 -- | Unit type instance
 instance GArbitrary self U1 'True where
