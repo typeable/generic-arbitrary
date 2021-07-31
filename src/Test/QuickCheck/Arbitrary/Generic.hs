@@ -44,8 +44,6 @@ import           GHC.Generics              as G
 import           GHC.TypeLits
 import           Test.QuickCheck           as QC
 import           Test.QuickCheck.Arbitrary (GSubterms, RecursivelyShrink)
-import           TypeFun.Data.Eq
-import           TypeFun.Data.List
 
 newtype GenericArbitrary a = GenericArbitrary { unGenericArbitrary :: a }
   deriving (Show, Eq)
