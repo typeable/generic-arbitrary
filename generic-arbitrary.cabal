@@ -12,10 +12,11 @@ license-file:        LICENSE
 author:              Typeable.io contributors
 maintainer:          makeit@typeable.io
 homepage:            http://github.com/typeable/generic-arbitrary#readme
+source-repository:   git@github.com:typeable/generic-arbitrary.git
 category:            Generic
 build-type:          Simple
 extra-source-files:  CHANGELOG.md
-cabal-version:       >=1.22
+cabal-version:       1.22
 tested-with:         GHC == 7.10.3
                    , GHC == 8.0.2
                    , GHC == 8.2.2
@@ -82,5 +83,4 @@ test-suite test
                     -threaded
                     -rtsopts
                     "-with-rtsopts=-N -A64m -qb0 -n4m -T -I1"
-  ghc-prof-options: -fprof-auto
   default-extensions: DeriveGeneric
