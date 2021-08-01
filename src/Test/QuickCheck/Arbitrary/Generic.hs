@@ -91,12 +91,12 @@ type family SumLen a :: Nat where
 -- * a: some part of the `Rep self`
 -- * finite: Is `a` finite? Infinite type has no finite values (like Stream)
 class (Finite self a ~ finite) => GArbitrary self a (finite :: Bool) where
-  gArbitrary :: QC.Gen (a x)
+  gArbitrary :: Proxy self -> QC.Gen (a x)
 
 instance
   ( GArbitrary self (C1 c f) 'True
   ) => GArbitrary self (D1 t (C1 c f)) 'True where
-  gArbitrary = M1 <$> gArbitrary @self
+  gArbitrary _ = M1 <$> gArbitrary (Proxy :: Proxy self)
 
 -- | The constructor meta information
 instance
@@ -104,27 +104,27 @@ instance
   , KnownNat (ArgumentsCount f)
   , AllFieldsFinal self f ~ some
   ) => GArbitrary self (C1 c f) some where
-  gArbitrary = M1 <$> scale predNat (gArbitrary @self)
+  gArbitrary _ = M1 <$> scale predNat (gArbitrary (Proxy :: Proxy self))
     where
-      argumentsCount = fromIntegral $ natVal (Proxy @(ArgumentsCount f))
+      argumentsCount = fromIntegral $ natVal (Proxy :: Proxy (ArgumentsCount f))
       predNat n = max 0 $ if argumentsCount > 1
         then n `div` argumentsCount
         else pred n
 
 -- | Unit type instance
 instance GArbitrary self U1 'True where
-  gArbitrary = pure U1
+  gArbitrary _ = pure U1
 
 -- | Constructor field meta information
 instance GArbitrary self f some => GArbitrary self (S1 t f) some where
-  gArbitrary = M1 <$> gArbitrary @self
+  gArbitrary _ = M1 <$> gArbitrary (Proxy :: Proxy self)
 
 -- | Data of the constructor field
 instance
   ( Arbitrary t
   , Finite self (Rec0 t) ~ some
   ) => GArbitrary self (Rec0 t) some where
-  gArbitrary = K1 <$> arbitrary
+  gArbitrary _ = K1 <$> arbitrary
 
 -- | Product
 instance
@@ -132,21 +132,24 @@ instance
   , GArbitrary self b bf
   , (af && bf) ~ some
   ) => GArbitrary self (a :*: b) some where
-  gArbitrary = liftA2 (:*:) (gArbitrary @self) (gArbitrary @self)
+  gArbitrary _ = liftA2 (:*:)
+    (gArbitrary (Proxy :: Proxy self)) (gArbitrary (Proxy :: Proxy self))
 
 instance
   ( TypeError (ShowType self :<>: Text " refers to itself in all constructors")
   , AllFieldsFinal self f ~ 'False
   ) => GArbitrary self (D1 t (C1 c f)) 'False where
-  gArbitrary = error "Unreachable"
+  gArbitrary _ = error "Unreachable"
 
 -- | ADT declaration with multiple constructors
 instance
   ( FiniteSum self a b af bf
   , GArbitrary self (a :+: b) 'True
   ) => GArbitrary self (D1 t (a :+: b)) 'True where
-  gArbitrary = sized $ \s -> M1 <$>
-    if s > 1 then gArbitrary @self else oneof (finiteSum @self @a @b)
+  gArbitrary _ = sized $ \s -> M1 <$>
+    if s > 1
+    then gArbitrary (Proxy :: Proxy self)
+    else oneof (finiteSum (Proxy :: Proxy self))
 
 -- | Any sum inside of declaration
 instance
@@ -154,9 +157,9 @@ instance
   , KnownNat (SumLen a), KnownNat (SumLen b)
   , (af || bf) ~ some
   ) => GArbitrary self (a :+: b) some where
-  gArbitrary = frequency
-    [ (lfreq, G.L1 <$> gArbitrary @self)
-    , (rfreq, G.R1 <$> gArbitrary @self) ]
+  gArbitrary _ = frequency
+    [ (lfreq, G.L1 <$> gArbitrary (Proxy :: Proxy self))
+    , (rfreq, G.R1 <$> gArbitrary (Proxy :: Proxy self)) ]
     where
       lfreq = fromIntegral $ natVal (Proxy :: Proxy (SumLen a))
       rfreq = fromIntegral $ natVal (Proxy :: Proxy (SumLen b))
@@ -164,52 +167,52 @@ instance
 class
   ( Finite self a ~ af, Finite self b ~ bf
   ) => FiniteSum self (a :: * -> *) (b :: * -> *) af bf where
-  finiteSum :: [Gen ((a :+: b) p)]
+  finiteSum :: Proxy self -> [Gen ((a :+: b) p)]
 
 instance
   ( FiniteSumElem self a, FiniteSumElem self b
   , Finite self a ~ 'True
   , Finite self b ~ 'True
   ) => FiniteSum self a b 'True 'True where
-  finiteSum = concat
-    [ fmap L1 <$> finiteElem @self @a
-    , fmap R1 <$> finiteElem @self @b]
+  finiteSum _ = concat
+    [ fmap L1 <$> finiteElem (Proxy :: Proxy self)
+    , fmap R1 <$> finiteElem (Proxy :: Proxy self)]
 
 instance
   ( FiniteSumElem self a
   , Finite self a ~ 'True
   , Finite self b ~ 'False
   ) => FiniteSum self a b 'True 'False where
-  finiteSum = fmap L1 <$> finiteElem @self @a
+  finiteSum _ = fmap L1 <$> finiteElem (Proxy :: Proxy self)
 
 instance
   ( FiniteSumElem self b
   , Finite self a ~ 'False
   , Finite self b ~ 'True
   ) => FiniteSum self a b 'False 'True where
-  finiteSum = fmap R1 <$> finiteElem @self @b
+  finiteSum _ = fmap R1 <$> finiteElem (Proxy :: Proxy self)
 
 class FiniteSumElem self a where
-  finiteElem :: [Gen (a p)]
+  finiteElem :: Proxy self -> [Gen (a p)]
 
 instance
   ( FiniteSum self a b af bf
   ) => FiniteSumElem self (a :+: b) where
-  finiteElem = finiteSum @self
+  finiteElem _ = finiteSum (Proxy :: Proxy self)
 
 instance
   ( GArbitrary self (C1 c f) 'True
   ) => FiniteSumElem self (C1 c f) where
-  finiteElem = [gArbitrary @self]
+  finiteElem _ = [gArbitrary (Proxy :: Proxy self)]
 
 instance
   ( TypeError (ShowType self :<>: Text " refers to itself in all constructors")
   , (Finite self a || Finite self b) ~ 'False
   ) => GArbitrary self (D1 t (a :+: b)) 'False where
-  gArbitrary = error "Unreachable"
+  gArbitrary _ = error "Unreachable"
 
 genericArbitrary
   :: forall a ga some
   . (Generic a, GArbitrary a ga some, ga ~ Rep a)
   => Gen a
-genericArbitrary = G.to <$> gArbitrary @a
+genericArbitrary = G.to <$> gArbitrary (Proxy :: Proxy a)

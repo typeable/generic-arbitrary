@@ -41,7 +41,6 @@ library
                     , PolyKinds
                     , RankNTypes
                     , ScopedTypeVariables
-                    , TypeApplications
                     , TypeFamilies
                     , TypeOperators
                     , TypeSynonymInstances
