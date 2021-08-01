@@ -135,11 +135,13 @@ instance
   gArbitrary _ = liftA2 (:*:)
     (gArbitrary (Proxy :: Proxy self)) (gArbitrary (Proxy :: Proxy self))
 
+#if __GLASGOW_HASKELL__ >= 800
 instance
   ( TypeError (ShowType self :<>: Text " refers to itself in all constructors")
   , AllFieldsFinal self f ~ 'False
   ) => GArbitrary self (D1 t (C1 c f)) 'False where
   gArbitrary _ = error "Unreachable"
+#endif
 
 -- | ADT declaration with multiple constructors
 instance
@@ -205,11 +207,14 @@ instance
   ) => FiniteSumElem self (C1 c f) where
   finiteElem _ = [gArbitrary (Proxy :: Proxy self)]
 
+
+#if __GLASGOW_HASKELL__ >= 800
 instance
   ( TypeError (ShowType self :<>: Text " refers to itself in all constructors")
   , (Finite self a || Finite self b) ~ 'False
   ) => GArbitrary self (D1 t (a :+: b)) 'False where
   gArbitrary _ = error "Unreachable"
+#endif
 
 genericArbitrary
   :: forall a ga some
