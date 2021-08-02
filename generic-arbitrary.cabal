@@ -59,8 +59,27 @@ test-suite test
                   , generic-arbitrary
                   , tasty
                   , tasty-discover
+                  , tasty-hunit
                   , tasty-quickcheck
-  other-modules: RecursiveTest
+  other-modules: NoTypecheckTest
+               , RecursiveTest
+  default-extensions: AllowAmbiguousTypes
+                    , CPP
+                    , DataKinds
+                    , DeriveGeneric
+                    , FlexibleContexts
+                    , FlexibleInstances
+                    , GeneralizedNewtypeDeriving
+                    , LambdaCase
+                    , MultiParamTypeClasses
+                    , PolyKinds
+                    , RankNTypes
+                    , ScopedTypeVariables
+                    , TypeFamilies
+                    , TypeOperators
+                    , TypeSynonymInstances
+                    , UndecidableInstances
+                    , ViewPatterns
   build-tools:   tasty-discover
   ghc-options:      -Wall
                     -threaded
