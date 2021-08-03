@@ -1,5 +1,5 @@
 name:                generic-arbitrary
-version:             0.3.0
+version:             1.0.0
 synopsis:            Generic implementation for QuickCheck's Arbitrary
 description:
     Generic implementations of methods of the 'Arbitrary' class from the

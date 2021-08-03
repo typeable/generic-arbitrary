@@ -19,3 +19,20 @@ instance Arbitrary Expr where
   arbitrary = genericArbitrary
   shrink = genericShrink
 ```
+
+if type has an argument then `Arg` is required
+
+``` haskell
+data Expr lit
+  = Lit lit
+  | Add Expr Expr
+  | Mul Expr Expr
+  deriving (Eq, Show, Generic)
+
+instance
+  ( Arbitrary lit
+  , Arg (Expr lit) lit
+  ) => Arbitrary (Expr lit) where
+  arbitrary = genericArbitrary
+  shrink = genericShrink
+```
