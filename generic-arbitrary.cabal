@@ -35,6 +35,7 @@ library
   default-language:    Haskell2010
   default-extensions: AllowAmbiguousTypes
                     , CPP
+                    , ConstraintKinds
                     , DataKinds
                     , DeriveGeneric
                     , FlexibleContexts

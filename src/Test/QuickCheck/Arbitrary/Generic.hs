@@ -32,6 +32,7 @@ The generated 'arbitrary' method is equivalent to
 module Test.QuickCheck.Arbitrary.Generic
   ( GenericArbitrary(..)
   , Arbitrary(..)
+  , Arg
   , genericArbitrary
   , genericShrink
   ) where
@@ -57,16 +58,20 @@ instance
   arbitrary = coerce (genericArbitrary :: Gen a)
   shrink = coerce (genericShrink :: a -> [a])
 
+type family TypesDiffer a b where
+  TypesDiffer a a = 'False
+  TypesDiffer a b = 'True
+
+type Arg self field = (TypesDiffer self field ~ 'True)
+
 type family AllFieldsFinal self (a :: * -> *) :: Bool where
   AllFieldsFinal self U1 = 'True
   AllFieldsFinal self (a :*: b) = AllFieldsFinal self a && AllFieldsFinal self b
-  AllFieldsFinal self (M1 S t (K1 R self)) = 'False
-  AllFieldsFinal self (M1 S t (K1 R other)) = 'True
+  AllFieldsFinal self (M1 S t (K1 R field)) = TypesDiffer self field
 
 type family Finite self (a :: * -> *) :: Bool where
   Finite self U1 = 'True
-  Finite self (K1 R self) = 'False
-  Finite self (K1 R other) = 'True
+  Finite self (K1 R field) = TypesDiffer self field
   Finite self (a :*: b) = Finite self a && Finite self b
   Finite self (M1 D t f) = Finite self f
   Finite self (a :+: b) = Finite self a || Finite self b
