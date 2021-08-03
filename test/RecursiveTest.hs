@@ -106,3 +106,15 @@ instance Arbitrary DeepRecursive where
 
 prop_deepRecursiveTotal :: DeepRecursive -> Property
 prop_deepRecursiveTotal = total
+
+data P p = NoP | P p
+  deriving (Eq, Show, Generic)
+
+instance (NFData p) =>  NFData (P p)
+
+instance (Arg (P p) p, Arbitrary p) => Arbitrary (P p) where
+  arbitrary = genericArbitrary
+  shrink = genericShrink
+
+prop_Ptotal :: P (P Int) -> Property
+prop_Ptotal = total
