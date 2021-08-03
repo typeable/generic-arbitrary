@@ -1,5 +1,5 @@
 resolver: lts-13.21
 
 extra-deps:
-  - QuickCheck-2.14
+  - QuickCheck-2.12.6.1
   - splitmix-0.0.5

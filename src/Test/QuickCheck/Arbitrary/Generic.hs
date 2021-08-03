@@ -30,8 +30,7 @@ The generated 'arbitrary' method is equivalent to
 -}
 
 module Test.QuickCheck.Arbitrary.Generic
-  ( GenericArbitrary(..)
-  , Arbitrary(..)
+  ( Arbitrary(..)
   , genericArbitrary
   , genericShrink
   ) where
@@ -43,19 +42,7 @@ import           Data.Type.Bool
 import           GHC.Generics              as G
 import           GHC.TypeLits
 import           Test.QuickCheck           as QC
-import           Test.QuickCheck.Arbitrary (GSubterms, RecursivelyShrink)
-
-newtype GenericArbitrary a = GenericArbitrary { unGenericArbitrary :: a }
-  deriving (Show, Eq)
-
-instance
-  ( Generic a,
-    GArbitrary a (Rep a) 'True,
-    RecursivelyShrink (Rep a),
-    GSubterms (Rep a) a
-  ) => Arbitrary (GenericArbitrary a) where
-  arbitrary = coerce (genericArbitrary :: Gen a)
-  shrink = coerce (genericShrink :: a -> [a])
+import           Test.QuickCheck.Arbitrary
 
 type family AllFieldsFinal self (a :: * -> *) :: Bool where
   AllFieldsFinal self U1 = 'True
