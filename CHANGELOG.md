@@ -1,3 +1,9 @@
+0.3.0
+-----
+
+* Fixed issue with too big terms in case of recursive types
+* Recpect the `size` argument
+
 0.2.0
 -----
 

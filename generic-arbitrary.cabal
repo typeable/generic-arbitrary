@@ -1,5 +1,5 @@
 name:                generic-arbitrary
-version:             0.2.0
+version:             0.3.0
 synopsis:            Generic implementation for QuickCheck's Arbitrary
 description:
     Generic implementations of methods of the 'Arbitrary' class from the
@@ -22,6 +22,10 @@ tested-with:         GHC == 7.10.3
                    , GHC == 8.4.1
                    , GHC == 8.6.5
                    , GHC == 8.10.1
+
+source-repository head
+  type:     git
+  location: https://github.com/typeable/generic-arbitrary.git
 
 library
   exposed-modules:     Test.QuickCheck.Arbitrary.Generic
