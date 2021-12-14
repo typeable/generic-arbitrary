@@ -1,4 +1,4 @@
-{-# LANGUAGE UndecidableInstances, TypeOperators, DataKinds, TypeFamilies, ScopedTypeVariables#-}
+{-# LANGUAGE FlexibleContexts, UndecidableInstances, TypeOperators, DataKinds, TypeFamilies, ScopedTypeVariables#-}
 
 {- |
 
