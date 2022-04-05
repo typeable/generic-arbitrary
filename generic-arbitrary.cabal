@@ -1,5 +1,5 @@
 name:                generic-arbitrary
-version:             0.2.0
+version:             0.2.1
 synopsis:            Generic implementation for QuickCheck's Arbitrary
 description:
     Generic implementations of methods of the 'Arbitrary' class from the
@@ -15,7 +15,7 @@ homepage:            http://github.com/typeable/generic-arbitrary#readme
 category:            Generic
 build-type:          Simple
 extra-source-files:  CHANGELOG.md
-cabal-version:       >=1.22
+cabal-version:       1.22
 tested-with:         GHC == 7.10.3
                    , GHC == 8.0.2
                    , GHC == 8.2.2

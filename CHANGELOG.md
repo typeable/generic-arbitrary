@@ -1,3 +1,8 @@
+0.2.1
+-----
+
+* Added compatibility with GHC 9.2.1
+
 0.2.0
 -----
 
