@@ -65,7 +65,10 @@ instance GArbitrary G.U1 where
   gArbitrary = pure G.U1
 
 instance Arbitrary c => GArbitrary (G.K1 i c) where
-  gArbitrary = G.K1 <$> arbitrary
+  gArbitrary = G.K1 <$> scale predNat arbitrary
+    where
+      predNat 0 = 0
+      predNat n = pred n
 
 instance GArbitrary f => GArbitrary (G.M1 i c f) where
   gArbitrary = G.M1 <$> gArbitrary
@@ -82,8 +85,8 @@ type family SumLen a :: Nat where
 instance (GArbitrary a, GArbitrary b, KnownNat (SumLen a), KnownNat (SumLen b)
          ) => GArbitrary (a G.:+: b) where
   gArbitrary = frequency
-    [ (lfreq, G.L1 <$> QC.scale pred gArbitrary)
-    , (rfreq, G.R1 <$> QC.scale pred gArbitrary) ]
+    [ (lfreq, G.L1 <$> gArbitrary)
+    , (rfreq, G.R1 <$> gArbitrary) ]
     where
       lfreq = fromIntegral $ natVal (Proxy :: Proxy (SumLen a))
       rfreq = fromIntegral $ natVal (Proxy :: Proxy (SumLen b))
