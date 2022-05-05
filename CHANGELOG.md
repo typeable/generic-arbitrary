@@ -1,3 +1,8 @@
+0.2.2
+-----
+
+* Resolved an issue where the size of the generators could become negative
+
 0.2.1
 -----
 
