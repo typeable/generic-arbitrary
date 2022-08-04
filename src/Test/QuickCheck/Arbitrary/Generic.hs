@@ -101,8 +101,8 @@ class (Finite self a ~ finite) => GArbitrary self a (finite :: Bool) where
   gArbitrary :: Proxy self -> QC.Gen (a x)
 
 instance
-  ( GArbitrary self (C1 c f) 'True
-  ) => GArbitrary self (D1 t (C1 c f)) 'True where
+  ( GArbitrary self (M1 C c f) 'True
+  ) => GArbitrary self (M1 D t (M1 C c f)) 'True where
   gArbitrary _ = M1 <$> gArbitrary (Proxy :: Proxy self)
 
 -- | The constructor meta information
@@ -110,7 +110,7 @@ instance
   ( GArbitrary self f some
   , KnownNat (ArgumentsCount f)
   , AllFieldsFinal self f ~ some
-  ) => GArbitrary self (C1 c f) some where
+  ) => GArbitrary self (M1 C c f) some where
   gArbitrary _ = M1 <$> scale predNat (gArbitrary (Proxy :: Proxy self))
     where
       argumentsCount = fromIntegral $ natVal (Proxy :: Proxy (ArgumentsCount f))
@@ -123,14 +123,14 @@ instance GArbitrary self U1 'True where
   gArbitrary _ = pure U1
 
 -- | Constructor field meta information
-instance GArbitrary self f some => GArbitrary self (S1 t f) some where
+instance GArbitrary self f some => GArbitrary self (M1 S t f) some where
   gArbitrary _ = M1 <$> gArbitrary (Proxy :: Proxy self)
 
 -- | Data of the constructor field
 instance
   ( Arbitrary t
-  , Finite self (Rec0 t) ~ some
-  ) => GArbitrary self (Rec0 t) some where
+  , Finite self (K1 R t) ~ some
+  ) => GArbitrary self (K1 R t) some where
   gArbitrary _ = K1 <$> arbitrary
 
 -- | Product
@@ -146,7 +146,7 @@ instance
 instance
   ( TypeError (ShowType self :<>: Text " refers to itself in all constructors")
   , AllFieldsFinal self f ~ 'False
-  ) => GArbitrary self (D1 t (C1 c f)) 'False where
+  ) => GArbitrary self (M1 D t (M1 C c f)) 'False where
   gArbitrary _ = error "Unreachable"
 #endif
 
@@ -154,7 +154,7 @@ instance
 instance
   ( FiniteSum self a b af bf
   , GArbitrary self (a :+: b) 'True
-  ) => GArbitrary self (D1 t (a :+: b)) 'True where
+  ) => GArbitrary self (M1 D t (a :+: b)) 'True where
   gArbitrary _ = sized $ \s -> M1 <$>
     if s > 1
     then gArbitrary (Proxy :: Proxy self)
@@ -210,8 +210,8 @@ instance
   finiteElem _ = finiteSum (Proxy :: Proxy self)
 
 instance
-  ( GArbitrary self (C1 c f) 'True
-  ) => FiniteSumElem self (C1 c f) where
+  ( GArbitrary self (M1 C c f) 'True
+  ) => FiniteSumElem self (M1 C c f) where
   finiteElem _ = [gArbitrary (Proxy :: Proxy self)]
 
 
@@ -219,7 +219,7 @@ instance
 instance
   ( TypeError (ShowType self :<>: Text " refers to itself in all constructors")
   , (Finite self a || Finite self b) ~ 'False
-  ) => GArbitrary self (D1 t (a :+: b)) 'False where
+  ) => GArbitrary self (M1 D t (a :+: b)) 'False where
   gArbitrary _ = error "Unreachable"
 #endif
 
