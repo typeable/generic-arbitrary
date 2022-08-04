@@ -1,3 +1,7 @@
+{-# LANGUAGE DerivingStrategies #-}
+{-# LANGUAGE DerivingVia #-}
+{-# LANGUAGE DeriveAnyClass #-}
+
 -- | Testing that our Arbitrary instances do not get stuck and respect the
 -- `size` parameter while generating.
 
@@ -10,36 +14,24 @@ import           Test.QuickCheck.Arbitrary.Generic
 
 data Unit = Unit
   deriving (Eq, Show, Generic)
-
-instance NFData Unit
-
-instance Arbitrary Unit where
-  arbitrary = genericArbitrary
-  shrink = genericShrink
+  deriving anyclass NFData
+  deriving Arbitrary via (GenericArbitrary Unit)
 
 prop_unitTotal :: Unit -> Property
 prop_unitTotal = total
 
 data Single = Single Int
   deriving (Eq, Show, Generic)
-
-instance NFData Single
-
-instance Arbitrary Single where
-  arbitrary = genericArbitrary
-  shrink = genericShrink
+  deriving anyclass NFData
+  deriving Arbitrary via (GenericArbitrary Single)
 
 prop_singleTotal :: Single -> Property
 prop_singleTotal = total
 
 data Multiple = M1 | M2 | M3 Int
   deriving (Eq, Show, Generic)
-
-instance NFData Multiple
-
-instance Arbitrary Multiple where
-  arbitrary = genericArbitrary
-  shrink = genericShrink
+  deriving anyclass NFData
+  deriving Arbitrary via (GenericArbitrary Multiple)
 
 prop_multipleTotal :: Multiple -> Property
 prop_multipleTotal = total
@@ -49,12 +41,8 @@ data Rec = Rec
   , single   :: Single
   , multiple :: Multiple
   } deriving (Eq, Show, Generic)
-
-instance NFData Rec
-
-instance Arbitrary Rec where
-  arbitrary = genericArbitrary
-  shrink = genericShrink
+    deriving anyclass NFData
+    deriving Arbitrary via (GenericArbitrary Rec)
 
 prop_recTotal :: Rec -> Property
 prop_recTotal = total
@@ -64,13 +52,8 @@ data Expr
   | Add Expr Expr
   | Mul Expr Expr
   deriving (Eq, Show, Generic)
-
--- | Instance with may fall into infinite loop
-instance Arbitrary Expr where
-  arbitrary = genericArbitrary
-  shrink = genericShrink
-
-instance NFData Expr
+  deriving anyclass NFData
+  deriving Arbitrary via (GenericArbitrary Expr)
 
 prop_exprTotal :: Expr -> Property
 prop_exprTotal = total
@@ -83,12 +66,8 @@ data Recursive
   | R4 Recursive
   | R5 Recursive String
   deriving (Eq, Show, Generic)
-
-instance NFData Recursive
-
-instance Arbitrary Recursive where
-  arbitrary = genericArbitrary
-  shrink = genericShrink
+  deriving anyclass NFData
+  deriving Arbitrary via (GenericArbitrary Recursive)
 
 prop_recursiveTotal :: Recursive -> Property
 prop_recursiveTotal = total
@@ -97,21 +76,17 @@ data DeepRecursive
   = Deep DeepRecursive DeepRecursive DeepRecursive DeepRecursive DeepRecursive
   | Short
   deriving (Eq, Show, Generic)
-
-instance NFData DeepRecursive
-
-instance Arbitrary DeepRecursive where
-  arbitrary = genericArbitrary
-  shrink = genericShrink
+  deriving anyclass NFData
+  deriving Arbitrary via (GenericArbitrary DeepRecursive)
 
 prop_deepRecursiveTotal :: DeepRecursive -> Property
 prop_deepRecursiveTotal = total
 
 data P p = NoP | P p
   deriving (Eq, Show, Generic)
+  deriving anyclass NFData
 
-instance (NFData p) =>  NFData (P p)
-
+-- Note that deriving via doesn't work for case with arguments
 instance (Arg (P p) p, Arbitrary p) => Arbitrary (P p) where
   arbitrary = genericArbitrary
   shrink = genericShrink

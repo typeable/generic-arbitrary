@@ -9,11 +9,11 @@ import           GHC.Generics                      (Generic)
 import           Test.QuickCheck
 import           Test.QuickCheck.Arbitrary.Generic
 
-
+-- | Recursive infinite type which can not have valid Arbitrary instance
 data R = R R
   deriving (Eq, Show, Generic)
 
--- | Instance which must not be valid
+-- | Instance which must not compile, but we are using deferred type errors
 instance Arbitrary R where
   arbitrary = genericArbitrary
   shrink = genericShrink
