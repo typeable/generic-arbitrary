@@ -5,6 +5,16 @@
 * Recpect the `size` argument
 * Types with parameters require `Arg` now
 
+0.2.2
+-----
+
+* Resolved an issue where the size of the generators could become negative
+
+0.2.1
+-----
+
+* Added compatibility with GHC 9.2.1
+
 0.2.0
 -----
 

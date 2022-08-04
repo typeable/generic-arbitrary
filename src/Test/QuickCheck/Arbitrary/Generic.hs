@@ -1,3 +1,5 @@
+{-# LANGUAGE FlexibleContexts, UndecidableInstances, TypeOperators, DataKinds, TypeFamilies, ScopedTypeVariables#-}
+
 {- |
 
 Generic implementation of the 'arbitrary' method. Example usage:
