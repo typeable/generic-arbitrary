@@ -1,4 +1,5 @@
 {-# OPTIONS_GHC -fdefer-type-errors #-}
+{-# OPTIONS_GHC -Wno-deferred-type-errors #-}
 
 -- | Test that infinite types has no Arbitrary instance
 
