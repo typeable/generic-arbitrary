@@ -67,7 +67,8 @@ test-suite test
                   , tasty-discover
                   , tasty-hunit
                   , tasty-quickcheck
-  other-modules: NoTypecheckTest
+  other-modules: LimitationDemo
+               , NoTypecheckTest
                , RecursiveTest
   default-extensions: AllowAmbiguousTypes
                     , CPP

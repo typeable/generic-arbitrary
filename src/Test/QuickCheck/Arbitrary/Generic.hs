@@ -53,7 +53,7 @@ newtype GenericArbitrary a = GenericArbitrary { unGenericArbitrary :: a }
 
 instance
   ( Generic a,
-    GArbitrary a (Rep a) 'True,
+    GArbitrary a (Rep a) some,
     RecursivelyShrink (Rep a),
     GSubterms (Rep a) a
   ) => Arbitrary (GenericArbitrary a) where
