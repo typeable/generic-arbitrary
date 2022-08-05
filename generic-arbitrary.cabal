@@ -4,7 +4,7 @@ synopsis:            Generic implementation for QuickCheck's Arbitrary
 description:
     Generic implementations of methods of the 'Arbitrary' class from the
     QuickCheck library. The approach taken here can lead to diverging instances
-    for recursive types but is safe for non-recursive ones and guarantees
+    for mutually recursive types but is safe for simply recursive ones and guarantees
     flat distribution for constructors of sum-types.
 
 license:             MIT
@@ -16,12 +16,7 @@ category:            Generic
 build-type:          Simple
 extra-source-files:  CHANGELOG.md
 cabal-version:       1.22
-tested-with:         GHC == 7.10.3
-                   , GHC == 8.0.2
-                   , GHC == 8.2.2
-                   , GHC == 8.4.1
-                   , GHC == 8.6.5
-                   , GHC == 8.10.1
+tested-with:         GHC == 8.10.7
                    , GHC == 9.0.2
 
 source-repository head
