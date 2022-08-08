@@ -4,12 +4,15 @@ on:
   - pull_request
 jobs:
   linux:
-    name: ${{ matrix.stackYaml }}
+    name: ${{ matrix.stack-yaml }}
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        stack-yaml: [stack.yaml, lts-18.18.yaml, lts-13.21.yaml]
     steps:
       - uses: actions/checkout@v3
       - uses: haskell/actions/setup@v2
         with:
           enable-stack: true
           stack-version: 'latest'
-      - run: stack test
+      - run: stack --stack-yaml ${{ matrix.stack-yaml }} --install-ghc test --fast
