@@ -1,5 +1,3 @@
-{-# LANGUAGE FlexibleContexts, UndecidableInstances, TypeOperators, DataKinds, TypeFamilies, ScopedTypeVariables#-}
-
 {- |
 
 Generic implementation of the 'arbitrary' method. Example usage:
@@ -32,8 +30,10 @@ The generated 'arbitrary' method is equivalent to
 -}
 
 module Test.QuickCheck.Arbitrary.Generic
-  ( GenericArbitrary(..)
-  , Arbitrary(..)
+  ( Arbitrary(..)
+#if MIN_VERSION_QuickCheck(2, 14, 0)
+  , GenericArbitrary(..)
+#endif
   , Arg
   , genericArbitrary
   , genericShrink
@@ -46,6 +46,7 @@ import           Data.Type.Bool
 import           GHC.Generics              as G
 import           GHC.TypeLits
 import           Test.QuickCheck           as QC
+#if MIN_VERSION_QuickCheck(2, 14, 0)
 import           Test.QuickCheck.Arbitrary (GSubterms, RecursivelyShrink)
 
 newtype GenericArbitrary a = GenericArbitrary { unGenericArbitrary :: a }
@@ -59,6 +60,7 @@ instance
   ) => Arbitrary (GenericArbitrary a) where
   arbitrary = coerce (genericArbitrary :: Gen a)
   shrink = coerce (genericShrink :: a -> [a])
+#endif
 
 type family TypesDiffer a b where
   TypesDiffer a a = 'False

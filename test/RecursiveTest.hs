@@ -15,7 +15,13 @@ import           Test.QuickCheck.Arbitrary.Generic
 data Unit = Unit
   deriving (Eq, Show, Generic)
   deriving anyclass NFData
+#if MIN_VERSION_QuickCheck(2, 14, 0)
   deriving Arbitrary via (GenericArbitrary Unit)
+#else
+instance Arbitrary Unit where
+  arbitrary = genericArbitrary
+  shrink = genericShrink
+#endif
 
 prop_unitTotal :: Unit -> Property
 prop_unitTotal = total
@@ -23,7 +29,13 @@ prop_unitTotal = total
 data Single = Single Int
   deriving (Eq, Show, Generic)
   deriving anyclass NFData
+#if MIN_VERSION_QuickCheck(2, 14, 0)
   deriving Arbitrary via (GenericArbitrary Single)
+#else
+instance Arbitrary Single where
+  arbitrary = genericArbitrary
+  shrink = genericShrink
+#endif
 
 prop_singleTotal :: Single -> Property
 prop_singleTotal = total
@@ -31,7 +43,13 @@ prop_singleTotal = total
 data Multiple = M1 | M2 | M3 Int
   deriving (Eq, Show, Generic)
   deriving anyclass NFData
+#if MIN_VERSION_QuickCheck(2, 14, 0)
   deriving Arbitrary via (GenericArbitrary Multiple)
+#else
+instance Arbitrary Multiple where
+  arbitrary = genericArbitrary
+  shrink = genericShrink
+#endif
 
 prop_multipleTotal :: Multiple -> Property
 prop_multipleTotal = total
@@ -42,7 +60,13 @@ data Rec = Rec
   , multiple :: Multiple
   } deriving (Eq, Show, Generic)
     deriving anyclass NFData
-    deriving Arbitrary via (GenericArbitrary Rec)
+#if MIN_VERSION_QuickCheck(2, 14, 0)
+  deriving Arbitrary via (GenericArbitrary Rec)
+#else
+instance Arbitrary Rec where
+  arbitrary = genericArbitrary
+  shrink = genericShrink
+#endif
 
 prop_recTotal :: Rec -> Property
 prop_recTotal = total
@@ -53,7 +77,13 @@ data Expr
   | Mul Expr Expr
   deriving (Eq, Show, Generic)
   deriving anyclass NFData
+#if MIN_VERSION_QuickCheck(2, 14, 0)
   deriving Arbitrary via (GenericArbitrary Expr)
+#else
+instance Arbitrary Expr where
+  arbitrary = genericArbitrary
+  shrink = genericShrink
+#endif
 
 prop_exprTotal :: Expr -> Property
 prop_exprTotal = total
@@ -67,7 +97,13 @@ data Recursive
   | R5 Recursive String
   deriving (Eq, Show, Generic)
   deriving anyclass NFData
+#if MIN_VERSION_QuickCheck(2, 14, 0)
   deriving Arbitrary via (GenericArbitrary Recursive)
+#else
+instance Arbitrary Recursive where
+  arbitrary = genericArbitrary
+  shrink = genericShrink
+#endif
 
 prop_recursiveTotal :: Recursive -> Property
 prop_recursiveTotal = total
@@ -77,7 +113,13 @@ data DeepRecursive
   | Short
   deriving (Eq, Show, Generic)
   deriving anyclass NFData
+#if MIN_VERSION_QuickCheck(2, 14, 0)
   deriving Arbitrary via (GenericArbitrary DeepRecursive)
+#else
+instance Arbitrary DeepRecursive where
+  arbitrary = genericArbitrary
+  shrink = genericShrink
+#endif
 
 prop_deepRecursiveTotal :: DeepRecursive -> Property
 prop_deepRecursiveTotal = total
