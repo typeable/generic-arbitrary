@@ -1,6 +1,7 @@
-{- |
+{-|
 
-Generic implementation of the 'arbitrary' method. Example usage:
+This module is a generic implementation of the 'arbitrary' method. Example
+usage:
 
 @
 data Foo = Foo
@@ -74,8 +75,52 @@ data R2 = R2 R1
 @
 
 This code will compile and the @arbitrary@ generated will always hand. Yes,
-there is a problem with mutually recursive types
+there is a problem with mutually recursive types.
 
+Now lets see an example of datatype with parameters
+
+@
+data A a = A a
+  deriving (Eq, Ord, Show)
+  deriving anyclass NFData
+  deriving (Generic)
+
+instance (Arbitrary a) => Arbitrary (A a) where
+  arbitrary = genericArbitrary
+  shrink = genericShrink
+@
+
+It should work from first glance, but on compilation it will throw an error:
+
+@
+    • Could not deduce (Test.QuickCheck.Arbitrary.Generic.GArbitrary
+                          (A a)
+                          (GHC.Generics.D1
+                             ('GHC.Generics.MetaData "A" "ParametersTest" "main" 'False)
+                             (GHC.Generics.C1
+                                ('GHC.Generics.MetaCons "A" 'GHC.Generics.PrefixI 'False)
+                                (GHC.Generics.S1
+                                   ('GHC.Generics.MetaSel
+                                      'Nothing
+                                      'GHC.Generics.NoSourceUnpackedness
+                                      'GHC.Generics.NoSourceStrictness
+                                      'GHC.Generics.DecidedLazy)
+                                   (GHC.Generics.Rec0 a))))
+                          (TypesDiffer (A a) a))
+        arising from a use of ‘genericArbitrary’
+@
+
+Here the @TypesDiffer@ is a type familty dealing with recursive types and
+helping us to eliminate inproper instances. To convince the compiller, that the
+@a@ parameter is not an @A a@ we must fix the instance with additional constraint
+
+@
+instance (Arg (A a) a, Arbitrary a) => Arbitrary (A a) where
+  arbitrary = genericArbitrary
+  shrink = genericShrink
+@
+
+Now everything compiles.
 
 -}
 
@@ -85,9 +130,17 @@ module Test.QuickCheck.Arbitrary.Generic
   , GenericArbitrary(..)
 #endif
   , Arg
+  , TypesDiffer
+  , AllFieldsFinal
+  , Finite
+  , ArgumentsCount
+  , SumLen
   , genericArbitrary
   , genericShrink
   ) where
+
+
+
 
 import           Control.Applicative
 import           Data.Coerce               (coerce)
@@ -98,6 +151,8 @@ import           GHC.TypeLits
 import           Test.QuickCheck           as QC
 #if MIN_VERSION_QuickCheck(2, 14, 0)
 import           Test.QuickCheck.Arbitrary (GSubterms, RecursivelyShrink)
+
+
 
 -- | Newtype for @DerivingVia@
 newtype GenericArbitrary a = GenericArbitrary { unGenericArbitrary :: a }
@@ -113,11 +168,11 @@ instance
   shrink = coerce (genericShrink :: a -> [a])
 #endif
 
+type Arg self field = (TypesDiffer self field ~ 'True)
+
 type family TypesDiffer a b where
   TypesDiffer a a = 'False
   TypesDiffer a b = 'True
-
-type Arg self field = (TypesDiffer self field ~ 'True)
 
 type family AllFieldsFinal self (a :: * -> *) :: Bool where
   AllFieldsFinal self U1 = 'True

@@ -5,7 +5,7 @@
 
 module NoTypecheckTest where
 
-import           Control.Exception
+import           Aux
 import           GHC.Generics                      (Generic)
 import           Test.QuickCheck
 import           Test.QuickCheck.Arbitrary.Generic
@@ -20,7 +20,4 @@ instance Arbitrary R where
   shrink = genericShrink
 
 unit_mustFail :: IO ()
-unit_mustFail = do
-  try (generate (arbitrary :: Gen R) >>= print) >>= \case
-    Left (_ :: SomeException) -> pure ()
-    Right _ -> error "Error expected"
+unit_mustFail = failGeneration @R

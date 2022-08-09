@@ -62,8 +62,10 @@ test-suite test
                   , tasty-discover
                   , tasty-hunit
                   , tasty-quickcheck
-  other-modules: LimitationDemo
+  other-modules: Aux
+               , LimitationDemo
                , NoTypecheckTest
+               , ParametersTest
                , RecursiveTest
   default-extensions: AllowAmbiguousTypes
                     , CPP
@@ -80,6 +82,7 @@ test-suite test
                     , PolyKinds
                     , RankNTypes
                     , ScopedTypeVariables
+                    , TypeApplications
                     , TypeFamilies
                     , TypeOperators
                     , TypeSynonymInstances
