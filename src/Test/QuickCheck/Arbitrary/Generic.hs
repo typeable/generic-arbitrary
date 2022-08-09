@@ -74,7 +74,7 @@ data R2 = R2 R1
   deriving Arbitrary via (GenericArbitrary R2)
 @
 
-This code will compile and the @arbitrary@ generated will always hand. Yes,
+This code will compile and the @arbitrary@ generated will always hang. Yes,
 there is a problem with mutually recursive types.
 
 Now lets see an example of datatype with parameters
@@ -90,7 +90,7 @@ instance (Arbitrary a) => Arbitrary (A a) where
   shrink = genericShrink
 @
 
-It should work from first glance, but on compilation it will throw an error:
+It should work from first glance, but when compile it will throw an error:
 
 @
     • Could not deduce (Test.QuickCheck.Arbitrary.Generic.GArbitrary
@@ -120,7 +120,7 @@ instance (Arg (A a) a, Arbitrary a) => Arbitrary (A a) where
   shrink = genericShrink
 @
 
-Now everything compiles.
+Now everything compiles and works as expected.
 
 -}
 
