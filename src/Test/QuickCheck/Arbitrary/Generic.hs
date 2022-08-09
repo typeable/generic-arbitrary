@@ -125,22 +125,25 @@ Now everything compiles and works as expected.
 -}
 
 module Test.QuickCheck.Arbitrary.Generic
-  ( Arbitrary(..)
+  ( -- * Main
+    genericArbitrary
+  , genericShrink
 #if MIN_VERSION_QuickCheck(2, 14, 0)
   , GenericArbitrary(..)
 #endif
   , Arg
-  , TypesDiffer
-  , AllFieldsFinal
+  -- * Internal
+  , GArbitrary
+  , FiniteSum
+  , FiniteSumElem
   , Finite
+  , AllFieldsFinal
+  , TypesDiffer
   , ArgumentsCount
   , SumLen
-  , genericArbitrary
-  , genericShrink
+  -- * Reexports
+  , Arbitrary(..)
   ) where
-
-
-
 
 import           Control.Applicative
 import           Data.Coerce               (coerce)
@@ -155,6 +158,16 @@ import           Test.QuickCheck.Arbitrary (GSubterms, RecursivelyShrink)
 
 
 -- | Newtype for @DerivingVia@
+--
+-- Usage:
+--
+-- @
+-- data Foo = Foo
+--   { _fooX :: X
+--   , _fooY :: Y
+--   } deriving (Generic)
+--     deriving (Arbitrary) via GenericArbitrary Foo
+-- @
 newtype GenericArbitrary a = GenericArbitrary { unGenericArbitrary :: a }
   deriving (Show, Eq)
 
@@ -167,6 +180,18 @@ instance
   arbitrary = coerce (genericArbitrary :: Gen a)
   shrink = coerce (genericShrink :: a -> [a])
 #endif
+
+-- | Constraint helper for types with parameters
+--
+-- Usage:
+--
+-- @
+-- data A a = A a
+--   deriving (Generic)
+-- instance (Arg (A a) a, Arbitrary a) => Arbitrary (A a) where
+--   arbitrary = genericArbitrary
+--   shrink = genericShrink
+-- @
 
 type Arg self field = (TypesDiffer self field ~ 'True)
 
