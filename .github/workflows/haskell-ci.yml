@@ -13,4 +13,4 @@ jobs:
         with:
           enable-stack: true
           stack-version: 'latest'
-      - run: stack --stack-yaml ${{ matrix.stack-yaml }} --install-ghc test --fast
+      - run: stack --stack-yaml ${{ matrix.stack-yaml }} --install-ghc test --fast --haddock
