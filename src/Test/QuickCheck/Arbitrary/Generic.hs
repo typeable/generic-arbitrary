@@ -25,7 +25,57 @@ data Foo = Foo
 
 The generated 'arbitrary' method is equivalent to
 
-@Foo <$> arbitrary <*> arbitrary@.
+@
+Foo <$> arbitrary <*> arbitrary
+@.
+
+It can also handle a recursive types problem. Assuming a type
+
+@
+data R = R R
+  deriving Generic
+@
+
+there is no instance
+
+@
+instance Arbitrary R where
+  arbitrary = genericArbitrary
+  shrink = genericShrink
+@
+
+If you try to compile this you will get a type level error
+
+>    • R refers to itself in all constructors
+
+Which means that there is no finite term for @R@ because it is recursive. But,
+if you correct the definition of @R@ like this.
+
+@
+data R = R R | F
+  deriving Generic
+@
+
+Then it will compile. And the @arbitrary@ generated will not hang forever, because
+it respects the @size@ parameter.
+
+There is a limitation of recursion detection:
+
+@
+data R1 = R1 R2
+  deriving (Eq, Ord, Show, Generic)
+  deriving anyclass NFData
+  deriving Arbitrary via (GenericArbitrary R1)
+
+data R2 = R2 R1
+  deriving (Eq, Ord, Show, Generic)
+  deriving anyclass NFData
+  deriving Arbitrary via (GenericArbitrary R2)
+@
+
+This code will compile and the @arbitrary@ generated will always hand. Yes,
+there is a problem with mutually recursive types
+
 
 -}
 
@@ -49,6 +99,7 @@ import           Test.QuickCheck           as QC
 #if MIN_VERSION_QuickCheck(2, 14, 0)
 import           Test.QuickCheck.Arbitrary (GSubterms, RecursivelyShrink)
 
+-- | Newtype for @DerivingVia@
 newtype GenericArbitrary a = GenericArbitrary { unGenericArbitrary :: a }
   deriving (Show, Eq)
 

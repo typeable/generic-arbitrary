@@ -1,7 +1,5 @@
 name: Haskell-CI
-on:
-  - push
-  - pull_request
+on: [push]
 jobs:
   linux:
     name: ${{ matrix.stack-yaml }}
