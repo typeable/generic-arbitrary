@@ -168,6 +168,8 @@ import           Test.QuickCheck.Arbitrary (GSubterms, RecursivelyShrink)
 --   } deriving (Generic)
 --     deriving (Arbitrary) via GenericArbitrary Foo
 -- @
+--
+-- @since 1.0.0
 newtype GenericArbitrary a = GenericArbitrary { unGenericArbitrary :: a }
   deriving (Show, Eq)
 
@@ -192,6 +194,8 @@ instance
 --   arbitrary = genericArbitrary
 --   shrink = genericShrink
 -- @
+--
+-- @since 1.0.0
 
 type Arg self field = (TypesDiffer self field ~ 'True)
 
