@@ -93,7 +93,7 @@ there is a problem with mutually recursive types.
 
 # Type parameters
 
-Now lets see an example of datatype with parameters
+Now let's see an example of datatype with parameters
 
 ``` haskell
 data A a = A a
@@ -108,25 +108,28 @@ instance (Arbitrary a) => Arbitrary (A a) where
 
 It should work from first glance, but when compile it will throw an error:
 
-> • Could not deduce (Test.QuickCheck.Arbitrary.Generic.GArbitrary
->                           (A a)
->                           (GHC.Generics.D1
->                              ('GHC.Generics.MetaData "A" "ParametersTest" "main" 'False)
->                              (GHC.Generics.C1
->                                 ('GHC.Generics.MetaCons "A" 'GHC.Generics.PrefixI 'False)
->                                 (GHC.Generics.S1
->                                    ('GHC.Generics.MetaSel
->                                       'Nothing
->                                       'GHC.Generics.NoSourceUnpackedness
->                                       'GHC.Generics.NoSourceStrictness
->                                       'GHC.Generics.DecidedLazy)
->                                    (GHC.Generics.Rec0 a))))
->                           (TypesDiffer (A a) a))
->         arising from a use of ‘genericArbitrary’
+```
+• Could not deduce (Test.QuickCheck.Arbitrary.Generic.GArbitrary
+                          (A a)
+                          (GHC.Generics.D1
+                             ('GHC.Generics.MetaData "A" "ParametersTest" "main" 'False)
+                             (GHC.Generics.C1
+                                ('GHC.Generics.MetaCons "A" 'GHC.Generics.PrefixI 'False)
+                                (GHC.Generics.S1
+                                   ('GHC.Generics.MetaSel
+                                      'Nothing
+                                      'GHC.Generics.NoSourceUnpackedness
+                                      'GHC.Generics.NoSourceStrictness
+                                      'GHC.Generics.DecidedLazy)
+                                   (GHC.Generics.Rec0 a))))
+                          (TypesDiffer (A a) a))
+        arising from a use of ‘genericArbitrary’
+```
 
 Here the `TypesDiffer` is a type familty dealing with recursive types and
 helping us to eliminate inproper instances. To convince the compiller, that the
-`a` parameter is not an `A a` we must fix the instance with additional constraint
+`a` parameter is not an `A a` we must fix the instance with additional
+constraint `Arg (A a) a`
 
 ``` haskell
 instance (Arg (A a) a, Arbitrary a) => Arbitrary (A a) where

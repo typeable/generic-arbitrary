@@ -15,6 +15,7 @@ homepage:            http://github.com/typeable/generic-arbitrary#readme
 category:            Generic
 build-type:          Simple
 extra-source-files:  CHANGELOG.md
+                   , README.md
 cabal-version:       1.22
 tested-with:         GHC == 8.10.7
                    , GHC == 9.0.2

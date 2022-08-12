@@ -127,7 +127,6 @@ Now everything compiles and works as expected.
 module Test.QuickCheck.Arbitrary.Generic
   ( -- * Main
     genericArbitrary
-  , genericShrink
 #if MIN_VERSION_QuickCheck(2, 14, 0)
   , GenericArbitrary(..)
 #endif
@@ -143,6 +142,7 @@ module Test.QuickCheck.Arbitrary.Generic
   , SumLen
   -- * Reexports
   , Arbitrary(..)
+  , genericShrink
   ) where
 
 import           Control.Applicative
