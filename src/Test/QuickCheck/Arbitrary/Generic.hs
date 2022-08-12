@@ -27,7 +27,7 @@ data Foo = Foo
 The generated 'arbitrary' method is equivalent to
 
 @
-Foo <$> arbitrary <*> arbitrary
+Foo '<$>' arbitrary '<*>' arbitrary
 @.
 
 It can also handle a recursive types problem. Assuming a type
