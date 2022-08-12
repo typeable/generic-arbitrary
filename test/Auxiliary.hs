@@ -1,4 +1,4 @@
-module Aux where
+module Auxiliary where
 
 import           Control.Exception
 import           Test.QuickCheck

@@ -5,7 +5,7 @@
 
 module NoTypecheckTest where
 
-import           Aux
+import           Auxiliary
 import           GHC.Generics                      (Generic)
 import           Test.QuickCheck
 import           Test.QuickCheck.Arbitrary.Generic

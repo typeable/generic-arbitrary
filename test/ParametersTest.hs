@@ -3,7 +3,7 @@
 
 module ParametersTest where
 
-import           Aux
+import           Auxiliary
 import           Control.DeepSeq
 import           GHC.Generics                      (Generic)
 import           Test.QuickCheck
