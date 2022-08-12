@@ -1,6 +1,6 @@
 # generic-arbitrary
 
-[![GitHub CI](https://github.com/typeable/generic-arbitrary/workflows/haskell-ci/badge.svg)](https://github.com/typeable/generic-arbitrary/actions)
+[![Haskell-CI](https://github.com/typeable/generic-arbitrary/actions/workflows/haskell-ci.yml/badge.svg)](https://github.com/typeable/generic-arbitrary/actions/workflows/haskell-ci.yml)
 
 # What?
 
