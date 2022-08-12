@@ -1,10 +1,10 @@
 name:                generic-arbitrary
-version:             0.2.2
+version:             1.0.0
 synopsis:            Generic implementation for QuickCheck's Arbitrary
 description:
     Generic implementations of methods of the 'Arbitrary' class from the
     QuickCheck library. The approach taken here can lead to diverging instances
-    for recursive types but is safe for non-recursive ones and guarantees
+    for mutually recursive types but is safe for simply recursive ones and guarantees
     flat distribution for constructors of sum-types.
 
 license:             MIT
@@ -16,16 +16,81 @@ category:            Generic
 build-type:          Simple
 extra-source-files:  CHANGELOG.md
 cabal-version:       1.22
-tested-with:         GHC == 7.10.3
-                   , GHC == 8.0.2
-                   , GHC == 8.2.2
-                   , GHC == 8.4.1
-                   , GHC == 8.6.5
-                   , GHC == 8.10.1
+tested-with:         GHC == 8.10.7
                    , GHC == 9.0.2
+
+source-repository head
+  type:     git
+  location: https://github.com/typeable/generic-arbitrary.git
 
 library
   exposed-modules:     Test.QuickCheck.Arbitrary.Generic
-  build-depends:       QuickCheck >= 2.14, base >=4.8 && <5
+  build-depends:       base >=4.8 && <5
+                     , QuickCheck
   hs-source-dirs:      src
   default-language:    Haskell2010
+  default-extensions: AllowAmbiguousTypes
+                    , CPP
+                    , ConstraintKinds
+                    , DataKinds
+                    , DeriveGeneric
+                    , FlexibleContexts
+                    , FlexibleInstances
+                    , GeneralizedNewtypeDeriving
+                    , LambdaCase
+                    , MultiParamTypeClasses
+                    , PolyKinds
+                    , RankNTypes
+                    , ScopedTypeVariables
+                    , TypeFamilies
+                    , TypeOperators
+                    , TypeSynonymInstances
+                    , UndecidableInstances
+                    , ViewPatterns
+
+
+test-suite test
+  type:             exitcode-stdio-1.0
+  hs-source-dirs:   test
+  main-is:          Test.hs
+  default-language: Haskell2010
+  build-depends:    base >= 4.8 && <5
+                  , QuickCheck
+                  , deepseq
+                  , generic-arbitrary
+                  , tasty
+                  , tasty-discover
+                  , tasty-hunit
+                  , tasty-quickcheck
+  other-modules: Aux
+               , LimitationDemo
+               , NoTypecheckTest
+               , ParametersTest
+               , RecursiveTest
+  default-extensions: AllowAmbiguousTypes
+                    , CPP
+                    , DataKinds
+                    , DeriveAnyClass
+                    , DeriveGeneric
+                    , DerivingStrategies
+                    , DerivingVia
+                    , FlexibleContexts
+                    , FlexibleInstances
+                    , GeneralizedNewtypeDeriving
+                    , LambdaCase
+                    , MultiParamTypeClasses
+                    , PolyKinds
+                    , RankNTypes
+                    , ScopedTypeVariables
+                    , TypeApplications
+                    , TypeFamilies
+                    , TypeOperators
+                    , TypeSynonymInstances
+                    , UndecidableInstances
+                    , ViewPatterns
+  build-tools:   tasty-discover
+  ghc-options:      -Wall
+                    -threaded
+                    -rtsopts
+                    "-with-rtsopts=-N -A64m -qb0 -n4m -T -I1"
+  default-extensions: DeriveGeneric
