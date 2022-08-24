@@ -1,3 +1,9 @@
+1.0.1
+-----
+
+* Compillability by GHC-9.2.4
+* Fix cabal `tested-with` field
+
 1.0.0
 -----
 
