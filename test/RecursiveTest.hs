@@ -1,6 +1,7 @@
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE DeriveAnyClass #-}
+{-# OPTIONS_GHC -fconstraint-solver-iterations=5 #-} -- GHC-9.2.4
 
 -- | Testing that our Arbitrary instances do not get stuck and respect the
 -- `size` parameter while generating.
