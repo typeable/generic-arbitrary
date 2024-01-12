@@ -66,6 +66,7 @@ test-suite test
                   , tasty-hunit
                   , tasty-quickcheck
   other-modules: Auxiliary
+               , EnumTest
                , LimitationDemo
                , NoTypecheckTest
                , ParametersTest
