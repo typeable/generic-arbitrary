@@ -12,6 +12,7 @@ jobs:
           - 9.0.2
           - 9.2.4
           - 9.4.3
+          - 9.8.1
     steps:
       - uses: actions/checkout@v3
       - uses: haskell/actions/setup@v2
