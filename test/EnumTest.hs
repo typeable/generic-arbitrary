@@ -1,4 +1,10 @@
-{-# OPTIONS_GHC -fconstraint-solver-iterations=6 #-}
+#if __GLASGOW_HASKELL__ >= 810
+{-# OPTIONS_GHC -fconstraint-solver-iterations=5 #-}
+#endif
+
+-- #elif __GLASGOW_HASKELL__ >= 904
+-- {-# OPTIONS_GHC -fconstraint-solver-iterations=6 #-}
+
 
 module EnumTest where
 
