@@ -1,5 +1,5 @@
 name: Haskell-CI
-on: [push]
+on: [push, pull_request]
 jobs:
   linux:
     name: GHC-${{ matrix.ghc-version }}
