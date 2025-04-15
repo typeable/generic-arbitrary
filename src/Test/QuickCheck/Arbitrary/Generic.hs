@@ -1,3 +1,10 @@
+#if __GLASGOW_HASKELL__ >= 806
+{-# OPTIONS_GHC -Wno-star-is-type #-}
+#endif
+#if __GLASGOW_HASKELL__ >= 800
+{-# OPTIONS_GHC -Wno-unticked-promoted-constructors #-}
+#endif
+
 {-|
 
 This module is a generic implementation of the 'arbitrary' method. Example

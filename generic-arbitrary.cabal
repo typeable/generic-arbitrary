@@ -99,4 +99,3 @@ test-suite test
                     -threaded
                     -rtsopts
                     "-with-rtsopts=-N -A64m -qb0 -n4m -T -I1"
-  default-extensions: DeriveGeneric

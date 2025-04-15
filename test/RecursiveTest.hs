@@ -8,7 +8,7 @@
 
 module RecursiveTest where
 
-import           Control.DeepSeq hiding (Unit)
+import           Control.DeepSeq (NFData)
 import           GHC.Generics                      (Generic)
 import           Test.QuickCheck
 import           Test.QuickCheck.Arbitrary.Generic
