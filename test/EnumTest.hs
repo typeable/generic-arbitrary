@@ -1,6 +1,6 @@
 #if __GLASGOW_HASKELL__ >= 806 && __GLASGOW_HASKELL__ <= 900
 {-# OPTIONS_GHC -fconstraint-solver-iterations=5 #-}
-#elif __GLASGOW_HASKELL__ >= 902 && __GLASGOW_HASKELL__ <= 908
+#elif __GLASGOW_HASKELL__ >= 902
 {-# OPTIONS_GHC -fconstraint-solver-iterations=6 #-}
 #endif
 

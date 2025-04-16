@@ -1,3 +1,10 @@
+#if __GLASGOW_HASKELL__ >= 806
+{-# OPTIONS_GHC -Wno-star-is-type #-}
+#endif
+#if __GLASGOW_HASKELL__ >= 800
+{-# OPTIONS_GHC -Wno-unticked-promoted-constructors #-}
+#endif
+
 {-|
 
 This module is a generic implementation of the 'arbitrary' method. Example
@@ -146,13 +153,14 @@ module Test.QuickCheck.Arbitrary.Generic
   ) where
 
 import           Control.Applicative
-import           Data.Coerce               (coerce)
 import           Data.Proxy
 import           Data.Type.Bool
 import           GHC.Generics              as G
 import           GHC.TypeLits
+import           Prelude
 import           Test.QuickCheck           as QC
 #if MIN_VERSION_QuickCheck(2, 14, 0)
+import           Data.Coerce (coerce)
 import           Test.QuickCheck.Arbitrary (GSubterms, RecursivelyShrink)
 
 
