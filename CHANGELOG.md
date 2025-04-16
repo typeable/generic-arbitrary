@@ -1,3 +1,8 @@
+1.0.1.2
+-------
+
+* Fix dependency bounds (including retroactively), and compilation with warnings.
+
 1.0.1.1
 -------
 
